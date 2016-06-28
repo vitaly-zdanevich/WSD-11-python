@@ -33,7 +33,6 @@ def show_archive_files():
 
     content = '<html><head></head><body><div>'
     with archive.open('Opportunity_Trigger.cls') as myfile:
-        # TODO you know better solution?
         content += str(myfile.readlines()) \
             .replace('\\n\', b\'}\']', "<br>}") \
             .replace("\\n', b'", "<br>") \
@@ -42,6 +41,7 @@ def show_archive_files():
             .replace('\\n", b\'', '<br>') \
             .replace('[b\'', '<br>') \
             .replace(' ', '&nbsp;')
+        # TODO you know better solution?
 
     content += '</div><br><br><img src=\'data:image/jpg;base64,'
     with archive.open('Bonus_Image.jpg', 'r') as myimage:
