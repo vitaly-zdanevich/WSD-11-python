@@ -1,5 +1,6 @@
 import json
 import zipfile
+import base64
 from io import BytesIO
 
 import flask
@@ -30,8 +31,24 @@ def show_archive_files():
 
     archive = zipfile.ZipFile(BytesIO(req.content))
 
+    content = '<html><head></head><body><div>'
     with archive.open('Opportunity_Trigger.cls') as myfile:
-        return flask.Response(myfile.read(), status=200, mimetype='text/text')
+        # TODO you know better solution?
+        content += str(myfile.readlines()) \
+            .replace('\\n\', b\'}\']', "<br>}") \
+            .replace("\\n', b'", "<br>") \
+            .replace('\\n", b"', "<br>") \
+            .replace('\\n\', b"', '<br>') \
+            .replace('\\n", b\'', '<br>') \
+            .replace('[b\'', '<br>') \
+            .replace(' ', '&nbsp;')
+
+    content += '</div><br><br><img src=\'data:image/jpg;base64,'
+    with archive.open('Bonus_Image.jpg', 'r') as myimage:
+        content += str((base64.b64encode(myimage.read()))).replace('b\'', '').replace('/9k=', '')
+
+    content += "/></body></html>"
+    return flask.Response(content, status=200, mimetype='text/html')
 
 if __name__ == '__main__':
     app.run()
