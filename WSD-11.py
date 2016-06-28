@@ -21,7 +21,7 @@ def show_text_file():
     for line in jsn['lines']:
         text += line['text'] + '\n'
 
-    return flask.Response(text, status=200, mimetype='application/json')
+    return flask.Response(text, status=200, mimetype='text/text')
 
 
 @app.route('/show_archive_files')
